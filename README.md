@@ -4,4 +4,4 @@ This repo is a shell for students at the University of Maryland's Philip Merrill
 
 I added this in the browser.
 
-This sentence I added on my computer desktop.
+This sentence I modified on my computer desktop.
