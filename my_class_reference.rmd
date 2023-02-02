@@ -1,6 +1,6 @@
 ---
 title: "Class Reference"
-author: "Student name"
+author: "Sam Carey"
 output:
   html_document:
     theme: cerulean
@@ -15,6 +15,10 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r}
+print("Hello puppy!")
+```
+
 ## Introduction
 
 Consider this a personal guide to the commands and functions you will learn. In general, when you come across an R command or function that you want to remember, put it in here along with a description of what it does and when you'd use it.
@@ -24,7 +28,7 @@ Consider this a personal guide to the commands and functions you will learn. In 
 The command to set a working directory is setwd(). For example:
 
 ```{r}
-setwd("~/Documents/GitHub/data_journalism_2023_spring")
+setwd("~/Desktop/j472")
 ```
 
 ### How to install and load the tidyverse
@@ -33,3 +37,10 @@ setwd("~/Documents/GitHub/data_journalism_2023_spring")
 install.packages("tidyverse")
 library(tidyverse)
 ```
+
+### How to read in a CSV file from the Internet
+
+```{r}
+wes_moore_contributions <- read_csv("https://raw.githubusercontent.com/stephenneukam/CNS_Annapolis/main/Campaign_finance/Moore_ContributionsList.csv")
+```
+
