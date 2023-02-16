@@ -1,0 +1,96 @@
+---
+title: "lab_02"
+author: "Sam Carey"
+date: "2023-01-07"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load libraries and establish settings
+
+```{r}
+# Turn off scientific notation
+options(scipen=999)
+
+# Load the tidyverse. If you have not installed the tidyverse already, remove the # from the next line and run it first.  
+# install.packages('tidyverse')
+library(tidyverse)
+library(lubridate)
+```
+
+## Load Data
+
+Let's keep working with the UMD courses and Maryland campaign expense data we used in the pre_lab.
+
+```{r}
+umd_courses <- read_rds("data/umd_courses.rds")
+maryland_expenses <- read_csv("data/maryland_expenses.csv")
+```
+
+## Answer questions
+
+**Q1** Create a new column that divides the expense amounts into the following categories - \$0-\$500, \$500-\$5000, \$5001-\$50000, \$50001\_\$100000, \$100001-\$500000 - giving each an appropriate text value, and count how many expenses are in each group. How would you describe the distribution of expenses in a sentence? Would you change the categories?
+
+**A1.** The most amount of expenses are within the \$0-\$500 category, the second most amount of expenses in the \$501-\$5000 category, the third most in the \$5001-\$50000 category, the fourth most in the \$50001-\$100000 category, the fifth most in the \$100001-\$500000 category, and the least amount of expenses in the N/A category. I changed the second category, \$500-\$5000, to \$501-\$5000 because when typing it into code,"amount > \$500" would never be \$500, it would start the range or category at \$501 instead. It's also important to note that there is a N/A category, meaning some of the data doesn't fit in these categories.
+
+```{r}
+maryland_expenses_with_category <- maryland_expenses %>%
+  mutate(
+    category = case_when(
+         amount <= 500 ~ "$0-$500",
+         amount > 500 & amount <= 5000 ~ "$501-$5000",
+         amount > 5000 & amount <= 50000 ~ "$5001-$50000",
+         amount > 50000 & amount <= 100000 ~ "$50001-$100000",
+         amount > 100000 & amount <= 500000 ~ "$100001-$500000",
+      )) %>%
+  group_by(category) %>%
+  summarise(
+    expense_category = n()
+  ) %>%
+  arrange(desc(expense_category))
+```
+
+**Q2.** How many departments have offered the courses with "Climate" in the title and at least one seat? Which department has offered the most? 
+**A2.** 22 departments have offered courses with "Climate" in the title and at least one seat. The Atmospheric and Oceanic Science department has offered the most courses with "Climate" in the title and at least one seat. 
+
+```{r}
+climate_courses <- umd_courses %>% filter(str_detect(title, "Climate") & seats >= 1)
+climate_courses %>%
+  group_by(department) %>%
+  summarise(
+    count_classes = n()
+  ) %>%
+  arrange(desc(count_classes))
+```
+
+**Q3.** Of the departments listed in A2, which one is the most interesting to you, and why?
+**A3.** I think the Economics department is the most interesting to me. A lot of the other departments, like Anthropology, Geographical Sciences, etc., all involve some sort of discussion with climate due to its type of meaning. However, economics usually involves money and accounting, not climate per se. It'd be interesting to see what classes economics involves climate in. 
+
+**Q4.** Using the Maryland campaign expenses data, change the datatype of the expenditure_date column so that it is a date and not a chr. Then create a new column for the month based on expenditure_date. Then write code that shows total amount spent each month by Wes Moore's committee (you'll need to search the data to find the exact name). Write a sentence describing the pattern of spending over time.
+**A4.** The most amount of spending was in October 2022 and dropped to the least amount of spending in December 2022. There was a lot more spending in 2022 versus 2021, so there was an increase in spending from 2021 to 2022. It's important to note some months have N/A results for the amount of spending.
+
+```{r}
+maryland_expenses_by_month <- maryland_expenses %>% mutate(expenditure_date=mdy(expenditure_date))
+
+maryland_expenses_by_month %>%
+  mutate(month = floor_date(expenditure_date, "month")) %>%
+  group_by(month) %>%
+  summarise(total_amount = sum(amount)) %>%
+  arrange(desc(total_amount))
+```
+
+**Q5.** Choose your own adventure: using either the UMD courses or campaign expenses data, ask and answer a question that is different than the previous ones. You can use one of the ones you provided in the pre_lab.
+**A5.** I am going to answer the question, "How many courses in the Biochemistry department have at least 80 seats?" The answer is 44 classes. 
+
+```{r}
+umd_courses_biochem <- umd_courses %>% filter(str_detect(department, "Biochemistry") & seats >= 80)
+umd_courses_biochem %>%
+  group_by(department) %>%
+  summarise(
+    count_classes = n()
+  ) %>%
+  arrange(desc(count_classes))
+```
