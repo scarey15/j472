@@ -83,7 +83,7 @@ maryland_expenses_by_month %>%
 ```
 
 **Q5.** Choose your own adventure: using either the UMD courses or campaign expenses data, ask and answer a question that is different than the previous ones. You can use one of the ones you provided in the pre_lab.
-**A5.** I am going to answer the question, "How many courses in the Biochemistry department have at least 80 seats?" The answer is 44 classes. 
+**A5.** I am going to answer the question, "How many courses in the Biochemistry department have at least 80 seats?" The answer is 44 courses. 
 
 ```{r}
 umd_courses_biochem <- umd_courses %>% filter(str_detect(department, "Biochemistry") & seats >= 80)
