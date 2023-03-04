@@ -1,7 +1,7 @@
 ---
 title: "Reverse Engineering Project"
-author: "Student names here"
-date: "Date here"
+author: "Samantha Carey and Dorothy Hood"
+date: "2023-03-03"
 output:
   html_document:
     theme: cerulean
@@ -18,14 +18,16 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction 
 
-In this notebook, we are reverse engineering the story, [STORY NAME](STORY URL)
+In this notebook, we are reverse engineering the story, [Comic Books Are Still Made By Men, For Men And About Men](https://fivethirtyeight.com/features/women-in-comic-books/)
 
 ## Load libraries
 
 Loading required libraries for this analysis.
 
 ```{r echo=FALSE, message=FALSE}
-
+library(tidyverse)
+library(lubridate)
+library(janitor)
 ```
 
 ## Load and Cleaning Data
@@ -39,6 +41,12 @@ In this section, describe the source of the data, write a basic data dictionary 
 
 # Clean required data and prepare for analysis if needed. 
 
+dc_comics <- read_csv("/Users/samlcarey/Desktop/j472/major_assignments/reverse_engineering/data/dc_wikia_data.csv")
+  cleaned_dc_comics <- dc_comics %>%
+  clean_names() 
+marvel_comics <- read_csv("/Users/samlcarey/Desktop/j472/major_assignments/reverse_engineering/data/marvel_wikia_data.csv") 
+  cleaned_marvel_comics <- marvel_comics %>%
+  clean_names() 
 
 ```
 
@@ -47,20 +55,26 @@ In this notebook, we are reverse engineering five sentences from the story.
 
 ### Sentence 1
 
-* **Sentence text**: [Paste in sentence to engineer here]
-* **Analysis summary**: [Write up two to three sentences describing the results of your analysis.  Were you able to confirm the finding? If not, why not?]
-
+* **Sentence text**: "The characters within them are also disproportionately men, as are the new characters introduced each year."
+* **Analysis summary**: It seems that in total, there are 1,967 D.C. comic female characters out of total of 6,896 D.C. comic characters, and there are 3,837 female comic Marvel characters out of 16,376 comic Marvel characters. In comparison, there are 4,783 male D.C. characters and 11,638 male Marvel characters when I switch "Female Characters" to "Male Characters" in the code below. The sentence above in the story is definitely confirmed with this data. 
 ```{r}
 # Put code to reverse engineer sentence here
-
+cleaned_dc_comics %>% 
+  filter(sex == "Female Characters") %>% 
+  group_by(year) %>% 
+  arrange(desc(year)) 
+cleaned_marvel_comics %>% 
+  filter(sex == "Female Characters") %>% 
+  group_by(year) %>% 
+  arrange(desc(year))
 # Display results of code below this codeblock
 
 ```
 
 ### Sentence 2
 
-* **Sentence text**: [Paste in sentence to engineer here]
-* **Analysis summary**: [Write up two to three sentences describing the results of your analysis.  Were you able to confirm the finding? If not, why not?]
+* **Sentence text**: [Paste in sentence to engineer here] 
+* **Analysis summary**: Write up two to three sentences describing the results of your analysis.  Were you able to confirm the finding? If not, why not?
 
 ```{r}
 # Put code to reverse engineer sentence here
