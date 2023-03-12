@@ -60,37 +60,68 @@ In this notebook, we are reverse engineering five sentences from the story.
 ```{r}
 # Put code to reverse engineer sentence here
 cleaned_dc_comics %>% 
-  filter(sex == "Female Characters") %>% 
-  group_by(year) %>% 
-  arrange(desc(year)) 
+  group_by(sex) %>% 
+  summarise(count = n()) %>% 
+  arrange(desc(count)) 
 cleaned_marvel_comics %>% 
-  filter(sex == "Female Characters") %>% 
-  group_by(year) %>% 
-  arrange(desc(year))
+  group_by(sex) %>% 
+  summarise(count = n()) %>% 
+  arrange(desc(count)) 
 # Display results of code below this codeblock
 
 ```
 
 ### Sentence 2
 
-* **Sentence text**: [Paste in sentence to engineer here] 
-* **Analysis summary**: Write up two to three sentences describing the results of your analysis.  Were you able to confirm the finding? If not, why not?
+* **Sentence text**: "Females make up about one in four comic book characters."
+
+* **Analysis summary**: The first part of the code I searched using ChatGPT. The prompt was: "How can I use code in R to list out the total number comic book characters in both comic companies?" and "How can I combine these two companies to show all of their data together?" We then filter out the total female characters in both companies. If you take the total number of female characters, 5,804, and divide it by the total number of characters, 23,272, and multiply it by 100, you get about 24.9 or 25%, which is 1 in 4. So, this proves what's stated in the sentence. 
 
 ```{r}
 # Put code to reverse engineer sentence here
+total_characters <- nrow(cleaned_dc_comics) + nrow(cleaned_marvel_comics)
+total_characters
 
+dc_and_marvel <- bind_rows(cleaned_dc_comics, cleaned_marvel_comics)
+
+dc_and_marvel %>% 
+  group_by(sex) %>% 
+  filter(sex == "Female Characters") %>% 
+  summarise(count = n()) %>% 
+  arrange(desc(count))
 # Display results of code below this codeblock
 
 ```
 
 ### Sentence 3
 
-* **Sentence text**: [Paste in sentence to engineer here]
-* **Analysis summary**: [Write up two to three sentences describing the results of your analysis.  Were you able to confirm the finding? If not, why not?]
+* **Sentence text**: "Of characters with gender data and 100 or more appearances (294 DC characters and 414 Marvel characters), only 29.0 percent of DC’s are female, and a similar 31.1 percent of the Marvel crowd is."
+
+* **Analysis summary**: We first made new data frames to hold each character in each company and if they appeared 100 or more times. In dc_character_appearcourt, we can see 294 comic book characters, and in marvel_character_appearcourt, we can see 414. This proves the first part of the sentence. Then, we filtered out from those data frames which characters were females and appeared 100 or more times. In DC, we got 85 characters, and in Marvel we got 128. If you take 85 and divide it by 294 and multipy it by 100, you get 28.9%. If you take 128 and divide it by 414 and multiply it by 100, you get 30.9%. Although not exactly 29.0% and 31.1% like the sentence says, the numbers we got can be rounded and are extremely similar. This proves the sentence. 
 
 ```{r}
 # Put code to reverse engineer sentence here
+dc_character_appearcount <- cleaned_dc_comics %>%
+  group_by(name, sex) %>%
+  summarise(count = sum(appearances)) %>%
+  filter(count >= 100) %>% 
+  arrange(desc(count))
+marvel_character_appearcount <- cleaned_marvel_comics %>%
+  group_by(name, sex) %>%
+  summarise(count = sum(appearances)) %>%
+  filter(count >= 100) %>% 
+  arrange(desc(count))
 
+dc_character_appearcount %>%
+  filter(sex == "Female Characters" & count >= 100) %>% 
+  group_by(name) %>%
+  summarise(count = sum(count)) %>%
+  arrange(desc(count))
+marvel_character_appearcount %>%
+  filter(sex == "Female Characters" & count >= 100) %>% 
+  group_by(name) %>%
+  summarise(count = sum(count)) %>%
+  arrange(desc(count))
 # Display results of code below this codeblock
 
 ```
