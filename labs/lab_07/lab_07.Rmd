@@ -1,0 +1,137 @@
+---
+title: "lab_07"
+author: "Sam Carey"
+date: "2023-03-28"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## You will need
+
+-   A Census API key
+
+## Load libraries and establish settings
+
+You'll need to load two packages for this: the tidyverse and tidycensus.
+
+**Task** load these two packages
+
+```{r}
+# Turn off scientific notation
+options(scipen=999)
+
+# Load the tidyverse.
+library(tidyverse)
+library(tidycensus) 
+```
+
+## Setup Census API
+
+You'll need your Census API Key:
+
+**Task** set your API Key if you haven't already. You won't need to install or overwrite it.
+
+```{r echo=FALSE}
+census_api_key("606c34a89905c65f9f0e5279eb4c15d0b60d75ab")
+```
+
+## Load and view ACS variables
+
+You'll also need to load the list of American Community Survey variables from the 2021 5-year estimates so you can identify the codes you need:
+
+**Task** load the variables from the 2021 5-year ACS (which is called "acs5") and save them to a dataframe
+
+```{r}
+acs5 <- load_variables(2021, "acs5", cache = TRUE)
+View(acs5)
+```
+
+## Answer questions
+
+**Q1** What is the Maryland jurisdiction with the lowest median age, according to the ACS 2021 5-year estimates? You will need to find the variable for median age first.
+
+**A1** Baltimore City, MD has the lowest median age (35.7).
+
+```{r}
+md_median_age <- get_acs(geography = "county",
+              variables = c(median_age = "B01002_001"),
+              state = "MD",
+              year = 2021)
+
+md_median_age <- md_median_age %>% arrange(estimate)
+
+md_median_age
+```
+
+**Q2** Which Maryland counties have a median age of at least 50? You can use the dataframe you just made to answer this, but you must write code to display only those counties with a median age of at least 50. 
+
+**A2** Only two counties in MD have a medium age of at leats 50. They are Worcester County and Talbot County. 
+
+```{r}
+md_median_age <- get_acs(geography = "county",
+              variables = c(median_age = "B01002_001"),
+              state = "MD",
+              year = 2021)
+
+md_median_age <- md_median_age %>% 
+  filter(estimate >= 50) %>% 
+  arrange(estimate)
+
+md_median_age
+```
+
+**Q3** We're interested in knowing more about Montgomery County zip codes where overdose calls are coming from and the demographic characteristics they possess. In particular, we want to calculate a rate of calls per 1,000 population. To do this, you'll need to:
+
+1. Load the Montgomery County 911 overdose calls data.
+2. Create a new dataframe with the total number of calls for each zip code.
+3. Find the ACS variable pertaining to the total 18 and up population (there are several choices here; you want the simplest one).
+4. Get from the ACS data from all Maryland zip codes using that variable.
+5. Join the ACS data to the Montgomery County zip code totals dataframe and rename the estimate column to a meaningful name you've given the ACS variable.
+6. Add a column to the joined dataframe that calculates a rate of calls per 1,000 population.
+
+Which zip code has the highest rate of calls? Which has the lowest?
+
+**A3** The zip code with the highest rate of calls is 20877 (about 1.70) and the lowest rate of calls is 20707 (about 0.04). 20877 is Gaithersburg, MD and 20707 is Laurel, MD. Both areas have similar amounts of people 18 years old and over, but a difference of roughly 4,000 (Gaithersburg has more). It's important to note that Gaithersburg is in Montgomery County and Laurel is in PG County it seems.   
+
+```{r}
+mont_911 <- read_csv("data/montgomery_2022_overdoses.csv")
+
+mont_total_calls <- mont_911 %>% 
+  mutate(zip = as.character(zip)) %>% 
+  group_by(zip) %>%
+  summarise(count = n()) %>% 
+  arrange(desc(count))
+
+md_18_and_up <- get_acs(geography = "zcta",
+              variables = c(eighteen_and_up = "B09021_001"),
+              state = "MD",
+              year = 2019)
+
+md_18_and_up_joined <- md_18_and_up %>% 
+  inner_join(mont_total_calls, by=c('GEOID'='zip')) %>%
+  rename(eighteen_and_up=estimate) %>%
+  mutate(calls_per_1000 = (count / eighteen_and_up) * 1000) %>% 
+  arrange(desc(calls_per_1000))
+```
+
+**Q4** Using [CensusReporter.org](https://censusreporter.org/), examine the zip codes with the highest and lowest rates and compare and contrast their demographic profiles. Is there a story here?
+
+**A4** It seems like in Gaithersburg (20877), the median age is 37.6, there is equal male and female percentages there, a larger population from 20-49 and a larger population of Hispanic people than white or Black (White and are close percentages). Laurel (20707) has a median age of 38, more female than males, a larger population from 20-49 and their biggest population is Black people, then white, then Hispanic.
+
+A story idea could possibly be why is there a higher rate of calls per 1,000 people in one area (Gaithersburg) versus another (Laurel) and does the demographic makeup affect this? How is the Hispanic population living in Gaithersburg compared to the Black population in Laurel since those are the majority races/ethnicities in each area? 
+
+**Q5** Go back to your joined dataframe from Q3 and add two more columns representing the minimum and maximum populations based on the estimate and margin of error, then calculate per capita rates for each. Do you get the same two zip codes for the highest and lowest as you did before? Does that give you more or less confidence in your answers to Q3?
+
+**A5** I did get the same two zip codes as I did before, 20877 (Gaithersburg) as the highest and 20707 (Laurel) as the lowest. This definitely gives me more confidence in my answers to Q3, especially as it gave similar or the same rate values I got from Q3 (1.7 for 20877 and 0.04 for 20707). 
+
+```{r}
+md_18_and_up_joined %>%
+  mutate(min2021 = eighteen_and_up-moe, max2021 = eighteen_and_up+moe) %>%
+  mutate(calls_per_1000_min = (count / min2021) * 1000) %>% 
+  mutate(calls_per_1000_max = (count / max2021) * 1000) %>% 
+  arrange(desc(calls_per_1000_min))
+```
+
