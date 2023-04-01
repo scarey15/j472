@@ -68,7 +68,8 @@ cleaned_marvel_comics %>%
   summarise(count = n()) %>% 
   arrange(desc(count)) 
 # Display results of code below this codeblock
-
+cleaned_dc_comics
+cleaned_marvel_comics
 ```
 
 ### Sentence 2
@@ -90,6 +91,7 @@ dc_and_marvel %>%
   summarise(count = n()) %>% 
   arrange(desc(count))
 # Display results of code below this codeblock
+dc_and_marvel
 
 ```
 
@@ -123,31 +125,57 @@ marvel_character_appearcount %>%
   summarise(count = sum(count)) %>%
   arrange(desc(count))
 # Display results of code below this codeblock
+dc_character_appearcount
+marvel_character_appearcount
 
 ```
 
 ### Sentence 4
 
-* **Sentence text**: [Paste in sentence to engineer here]
-* **Analysis summary**: [Write up two to three sentences describing the results of your analysis.  Were you able to confirm the finding? If not, why not?]
+* **Sentence text**: "Women and men were almost exactly equally likely to have a secret identity in the Marvel universe (49.4 percent of males and 49.5 percent of females), while in the DC universe 51 percent of males had a secret identity and 45 percent of females did."
+
+* **Analysis summary**: After putting in this code for each comic company, it listed out the "ids," sex and count. This showed how many male and female characters in DC and Marvel had secret identities, among other genders. For Marvel, when you add up male characters that were labeled with secret identity, public identity and no dual identity, you get 9,119 male characters. When you divide the male characters with secret identities, 4,506, by 9,119 and multiply it by 100, you get 49.4%. There are a total of 3,042 females, and dividng their secret identity total (1505) by that total, you get 49.5%. 
+
+For DC, you just have to add the secret identity and public identity totals. For males, we divided 1,751 by 3,413 and got 51%. For females, we divided 625 by 1,390 and got 45%. Overall, this code confirmed the findings in the story. 
 
 ```{r}
 # Put code to reverse engineer sentence here
+marvel_identities <- cleaned_marvel_comics %>%
+  group_by(id, sex) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
 
+dc_identities <- cleaned_dc_comics %>%
+  group_by(id, sex) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
 # Display results of code below this codeblock
-
+dc_identities
+marvel_identities
 ```
 
 ### Sentence 5
 
-* **Sentence text**: [Paste in sentence to engineer here]
-* **Analysis summary**: [Write up two to three sentences describing the results of your analysis.  Were you able to confirm the finding? If not, why not?]
+* **Sentence text**: "Women were substantially underrepresented among characters with at least one appearance. Among the characters for which we have gender data, females made up only 29.3 percent of the DC character list and 24.7 percent of the Marvel roster."
+
+* **Analysis summary**: We made new data frames for each comic company, and they show DC's characters, their sex, and their number of appearances that is at least 1. For DC, there is a total of 1,880 female characters with at least one appearance. When dividing this by the total gendered characters (leaving out N/A), 6,427, and multipy it by 100, you get 29.3%. There are 3,598 total female characters with at least one appearance, and dividng that number by the total (minus N/A and "agender characters"), 14,500, and mutiply it by 100, you get 24.8% which is .1 percent off from 24.7%. Overall, this seems to confirm the stories findings.  
 
 ```{r}
 # Put code to reverse engineer sentence here
+dc_appearances <- cleaned_dc_comics %>%
+  filter(appearances >= 1) %>%
+  group_by(name, sex, appearances) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
 
+marvel_appearances <- cleaned_marvel_comics %>%
+  filter(appearances >= 1) %>%
+  group_by(name, sex, appearances) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
 # Display results of code below this codeblock
-
+dc_appearances
+marvel_appearances
 ```
 
 -30-
