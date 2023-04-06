@@ -1,0 +1,162 @@
+---
+title: "lab_08"
+author: "Sam Carey"
+date: "2023-04-03"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load libraries and establish settings
+
+**Task** Create a codeblock and load appropriate packages and settings for this lab. We'll be making some charts, working with dates and retrieving Census data.
+
+```{r}
+options(scipen=999)
+
+library(tidyverse)
+library(tidycensus)
+library(lubridate)
+```
+
+
+## Load and modify data
+
+**Task** Create a codeblock and load the following data from the data folder:
+
+* Prince George's County 911 Overdose Calls
+
+You will need to create columns for the date, week and month based on the existing `datetime` column.
+
+```{r}
+pg_county_calls <- read_csv("data/prince_georges_2022_overdoses.csv")
+
+pg_county_calls <- pg_county_calls %>%
+  mutate(datetime = as.Date(datetime)) %>%
+  mutate(month = month(datetime, label = TRUE)) %>%
+  mutate(week = week(datetime))
+
+```
+
+
+## Questions 
+
+**Q1.** Which month saw the greatest percentage of total calls? Create a dataframe that calculates the percentage of all calls that each month's calls represents. Make a bar chart from that dataframe. Your bar chart must have:
+
+* A clear title that states the main idea/finding
+* Good labels for the x & y axis and a caption for the source, which is Prince George's County EMS.
+* Readable bars - the values shouldn't be overlapping
+
+Compare the results here to those from the pre_lab_08 bar chart - are there major differences in the months with the highest and lowest figures? Describe that below.
+
+**A1.** The month that saw the greatest percentage of total calls was December with 141 calls and 10.1% of the total calls. Yes, there does seem to be major differences in the months with the highest and lowest figures. In the pre_lab_08 bar chart, warmer months (August, May, April, etc.) have a higher amount of calls in Baltimore County. Here in PG County, the colder months (December, November, September, etc.) has the most amount of calls. 
+
+```{r}
+pg_county_calls_by_month <- pg_county_calls %>%
+  group_by(month) %>% 
+  summarize(total_calls = n()) %>% 
+  mutate(percent_calls = total_calls / sum(total_calls) * 100) %>%
+  arrange(desc(percent_calls))
+
+pg_county_calls_by_month
+
+pg_county_calls_by_month %>%
+  ggplot() +
+  geom_bar(aes(x=reorder(month,percent_calls), weight=percent_calls)) +
+  coord_flip() + 
+  theme_minimal() +
+  labs(
+    title="More 911 Overdose Calls in Colder Months",
+    x = "Month",
+    y = "% of Total Calls",
+    caption = "source: Prince George's County EMS"
+    
+  )
+```
+
+**Q2.** Let's visualize this data on a weekly basis using a line chart. As in Q1, generate a dataframe with the total number of calls for each week, and then create a line chart to show the distribution of calls over time. Your line chart must have:
+
+* A clear title that states the main idea/finding
+* Good labels for the x & y axis and a caption for the source, which is Prince George's County EMS.
+* Readable labels
+
+Describe the pattern of results; you may want to look at the data to dig into particular outliers.
+
+**A2.** Most of the weeks in the year range from about 20-30 calls; however, it's important to note two outliers. The first outlier lies on the 28th week of the year, in which 41 calls were made, the most amount of calls made in a week. The second outlier lies on the 53rd week of the year with 4 calls, the least amount. The 28th week of the year lies in July, in a warmer month where more people would be located outside. The 53rd week lies in December when the year is ending and it's very cold out, keeping people inside. I think this makes sense as more people could use drugs more easily while being outside versus inside during the winter. It also is interesting to see from the bar chart that December and July have the two biggest percentages of overdose calls.
+
+
+```{r}
+pg_county_calls_by_week <- pg_county_calls %>%
+  group_by(week) %>% 
+  summarize(total_calls = n()) %>% 
+  arrange(desc(total_calls))
+
+pg_county_calls_by_week
+
+pg_county_calls_by_week %>%
+  ggplot() + 
+  geom_line(aes(x=week, y=total_calls)) + 
+  labs(
+    title="Most 911 Overdose Calls Made in the 28th Week of the Year",
+    x = "Week in a Year",
+    y = "# of Total Calls",
+    caption = "source: Prince George's County EMS"
+    
+  )
+
+```
+
+**Q3.**  A scatterplot is a type of chart that helps us see relationships between two variables. One variable goes on the x axis, the other on the y axis.  For each row/observation in our data, a scatterplot puts a circle (or a "point") where the two variables intersect on a grid. 
+
+Statisticians use scatterplots to show graphically whether one variable is correlated -- related, in a statistical sense -- with another variable.  A classic example is the [relationship between ice cream sales and temperature](https://www.mathsisfun.com/data/scatter-xy-plots.html). The scatterplot below -- press play to load the image -- shows that relationship, that an increase in temperature is associated with an increase in ice cream sales. When it's 12C, sales are 200 dollars, and when it's hotter, 25C, sales are 600 dollars.
+
+```{r}
+knitr::include_graphics("https://www.mathsisfun.com/data/images/scatter-ice-cream1.svg")
+```
+
+We're going to use a scatterplot a little differently, to get a visual sense of two key variables: 
+
+Our question is: does the median income in a zip code have any relationship to the number of overdose 911 calls in that zip code?
+
+To answer this question, do the following:
+
+1. Generate a dataframe with the number of 911 calls for each zip code.
+2. Get data from the Census Bureau showing median household income for Maryland zip codes.
+3. Join those two dataframes on their zip code columns, starting with the 911 calls dataframe.
+4. Make a scatterplot showing the total calls and median income. I didn't show you how to do this, so look it up! Googling "ggplot scatterplot" is a good start.
+5. Give it an appropriate title, source, and x and y axis titles.
+6. Add a label for each point that shows the zip code using geom_text() - see some examples of its use at https://ggplot2.tidyverse.org/reference/geom_text.html#ref-examples. Try to make the names as easy to read as possible by avoiding overlap.
+7. In the answer space below, describe what you see and answer the questions posed above. In a general sense, what do you think this means? Feel free to consider the actual raw values: how would you report out the main point(s) of this chart?
+
+**A3.** It seems to me that the median income in a zip code does have a relationship to the number of overdose 911 calls. It seems that as the median household income decreases, the number of 911 overdose calls increases. In the scatter plot it starts with zip codes in higher median household income areas with the least amount of calls and gradually slopes down like a mountain as median income lowers, increasing the number of 911 calls. I think this means that in areas with a lower median household income, or areas where there is more poverty, there seems to be an uptick in 911 overdose calls. Reporting out from this chart would include data on areas of poverty/lower median incomes and how overdoses tend to be more common in these areas.
+
+```{r}
+pg_county_calls_by_zip <- pg_county_calls %>%
+  group_by(zipcode) %>% 
+  summarize(total_calls = n()) %>% 
+  arrange(desc(total_calls))
+
+census_api_key("606c34a89905c65f9f0e5279eb4c15d0b60d75ab")
+
+md_median_income <- get_acs(geography = "zcta",
+              variables = c(medincome = "B19013_001"),
+              state = "MD",
+              year = 2019)
+
+pg_county_calls_with_acs <- pg_county_calls_by_zip %>% 
+  inner_join(md_median_income, by=c('zipcode'='GEOID')) %>%
+  rename(medianincome=estimate)
+
+pg_county_calls_with_acs %>% 
+  ggplot() + 
+  geom_point(aes(x=total_calls, y=medianincome)) +
+  geom_text(aes(x = total_calls, y = medianincome, label = zipcode, check_overlap = TRUE), size = 2.5, vjust = 2.0) +
+  labs(x = "Total Calls", 
+       y = "Median Household Income", 
+       title = "Most 911 Overdose Calls in Areas Where Household Income is Low",
+       caption = "source: Prince George's County EMS and Census Bureau")
+
+
+```
