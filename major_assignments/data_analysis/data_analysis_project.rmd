@@ -1,1 +1,83 @@
+---
+title: "Data Analysis Project"
+author: "Samantha Carey and Dorothy Hood"
+date: "2023-14-04"
+output:
+  html_document:
+    theme: cerulean
+    highlight: pygments
+    toc: true
+    toc_float:
+      collapsed: true
+      smooth_scroll: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+In this notebook, we are analyzing data from Spotify and Youtube on artists and their top 10 songs found here: https://www.kaggle.com/datasets/salvatorerastelli/spotify-and-youtube
+
+## Load Libraries
+
+```{r echo=FALSE, message=FALSE}
+library(tidyverse)
+library(lubridate)
+library(janitor)
+```
+
+## Load and Clean Data
+
+```{r}
+# Load data and clean it
+
+spotify_and_youtube <- read_csv("/Users/samlcarey/Desktop/j472/major_assignments/data_analysis/data/Spotify_Youtube.csv")
+  cleaned_spotify_and_youtube <- spotify_and_youtube %>%
+  clean_names() 
+  
+```
+
+## Exploratory Analysis
+
+1. In our data set, it seems that there are 28 columns and 20,718 rows. In this case, a lot of information!
+
+2. The data includes various artists' top 10 songs and their information on Spotify and Youtube, including streams, URLs, albums and more. There is also data on each songs' danceability, energy, loudness, and more. 
+
+## Limitations and Flaws
+
+1. The first column, labeled "x1," lists out the artists' top 10 songs in number from zero to nine. For example, 0 to 9 in the data set count 10 songs by Gorillaz. It does this all the way down the data set, continuing with 10-19, then 20-29, etc. 
+
+We thought this was a bit of an organizations flaw as first, there is no accurately-titled column name, and starting a count of 10 from zero to nine is a bit off to the eye. We could get rid of that column but I think it's nice to see an ordered list for each artist. What we can do is rename the column, which we think could be something like "artist_10_songs_listed." 
+
+```{r}
+cleaned_spotify_and_youtube <- cleaned_spotify_and_youtube %>%  
+  rename(artist_10_songs_listed = x1)
+```
+
+2. The data under "album_type" either shows if a song is part of an album,a single or a compilation. We think the column name should reflect that better than being called "album_type" as that doesn't necessarily mean single or compilation. 
+
+3. The "duration_ms" column lists out all of the songs' lenghts in milliseconds, which is a bit inconvenient to look at versus seeing the length in minutes and seconds. We think we can make this easier by dividing each value in that column by 60,000 (60,000 milliseconds in a minute) and adding a new column to see that length in minutes. 
+
+```{r}
+cleaned_spotify_and_youtube <- cleaned_spotify_and_youtube %>% 
+  mutate(duration_minutes = duration_ms/60000)
+```
+
+There are now 29 columns, and it seems some of the values didn't carry over another minute (some say > 60 seconds like 3.71 for the first song for example). Maybe we can figure out a way to specify this further. 
+
+## Other Limits in Timeframe, What is and isn't Included, Definitions, etc.
+
+1. The data notes on Kaggle mention that the data is heavily dependent on when it was collected, being Feb. 7, 2023. It also says at the top that the data page was updated 25 days ago. Obviously, songs will be streamed and listened to and have been after Feb. 7, so the numbers are probably a bit different. 
+
+2. It's interesting to note that only likes are counted in this data and not dislikes, because many songs do have dislikes that could be significant. 
+
+3. The data from danceability to tempo, they are all studied on a scale to provide a number to show, for example, how loud, or not loud, a song is. (Under "loudness"). The data on Kaggle lists what the numbers could mean when it comes to more or less of something, and what's considered when choosing the number. However, there isn't any calculation or explanation on how these numbers are reached. For "Key," the integers match to pitches in Pitch Class notation. We aren't super familiar with what that means so it definitely requires some research. 
+
+To better define some of these, the information listed under each column on Kaggle does provide some insight so we can better understand where it comes from. For example, "liveness" detects the presence of an audience in the recording. 
+
+
+
+
 
