@@ -18,7 +18,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-In this notebook, we are analyzing data from Spotify and Youtube on artists and their top 10 songs found here: https://www.kaggle.com/datasets/salvatorerastelli/spotify-and-youtube
+In this notebook, we are analyzing data from Spotify and YouTube on artists and their top 10 songs found here: https://www.kaggle.com/datasets/salvatorerastelli/spotify-and-youtube
 
 ## Load Libraries
 
@@ -43,7 +43,7 @@ spotify_and_youtube <- read_csv("/Users/samlcarey/Desktop/j472/major_assignments
 
 1. In our data set, it seems that there are 28 columns and 20,718 rows. In this case, a lot of information!
 
-2. The data includes various artists' top 10 songs and their information on Spotify and Youtube, including streams, URLs, albums and more. There is also data on each songs' danceability, energy, loudness, and more. 
+2. The data includes various artists' top 10 songs and their information on Spotify and YouTube, including streams, URLs, albums and more. There is also data on each songs' danceability, energy, loudness, and more. 
 
 ## Limitations and Flaws
 
@@ -59,6 +59,8 @@ cleaned_spotify_and_youtube <- cleaned_spotify_and_youtube %>%
 2. The data under "album_type" either shows if a song is part of an album,a single or a compilation. We think the column name should reflect that better than being called "album_type" as that doesn't necessarily mean single or compilation. 
 
 3. The "duration_ms" column lists out all of the songs' lenghts in milliseconds, which is a bit inconvenient to look at versus seeing the length in minutes and seconds. We think we can make this easier by dividing each value in that column by 60,000 (60,000 milliseconds in a minute) and adding a new column to see that length in minutes. 
+
+4. There are some N/A's in the stream column which doesn't make sense since there is a YouTube link. When you check the songs on YouTube, like the "Best Friend (Remix)" by 50 Cent, it shows a view count. 
 
 ```{r}
 cleaned_spotify_and_youtube <- cleaned_spotify_and_youtube %>% 
@@ -77,7 +79,17 @@ There are now 29 columns, and it seems some of the values didn't carry over anot
 
 To better define some of these, the information listed under each column on Kaggle does provide some insight so we can better understand where it comes from. For example, "liveness" detects the presence of an audience in the recording. 
 
+## Does this data answer our questions?
 
+1. How does this data compare to users who don’t watch the videos of certain songs, or use another platform that isn’t Spotify, like Apple Music?
+
+As mentioned in notes by Professor Willis and our own data given, we can't use the data to compare Spotify and Apple Music since we only have data for Apple Music. So, we can compare YouTube and Spotify instead. We can use the amount of views on YouTube to the amount of streams on Spotify and see if more people use one platform over another, or use them the same amount.
+
+2. Should there be a place to show the number of streams each song/video has?
+
+As mentioned by Professor Willis and after looking at our data, our data frame doesn't help us answer this question. We decided to change this question but are stuck between two options. One would be: What artist/s has the most views/streams on Spotify and YouTube? We can use the data fro this. The second question could be: Do songs that are not licensed and not official videos gets less views on YouTube? We can see this through the data as well.
+
+3-5. These questions we can use the data to compare Spotify streams and YouTube views for songs, calculate totals and research artists' ages. We can even use Datawrapper for these to study the trends of longer or shorter songs and more or less dance-able and high/low energy songs to see the differences in popularity. 
 
 
 
