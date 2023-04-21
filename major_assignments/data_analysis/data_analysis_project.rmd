@@ -87,9 +87,56 @@ As mentioned in notes by Professor Willis and our own data given, we can't use t
 
 2. Should there be a place to show the number of streams each song/video has?
 
-As mentioned by Professor Willis and after looking at our data, our data frame doesn't help us answer this question. We decided to change this question but are stuck between two options. One would be: What artist/s has the most views/streams on Spotify and YouTube? We can use the data fro this. The second question could be: Do songs that are not licensed and not official videos gets less views on YouTube? We can see this through the data as well.
+As mentioned by Professor Willis and after looking at our data, our data frame doesn't help us answer this question. We decided to change this question but are stuck between two options. One would be: What artist/s has the most views/streams on Spotify and YouTube? We can use the data for this. The second question could be: Do songs that are not licensed and not official videos gets less views on YouTube? We can see this through the data as well.
 
 3-5. These questions we can use the data to compare Spotify streams and YouTube views for songs, calculate totals and research artists' ages. We can even use Datawrapper for these to study the trends of longer or shorter songs and more or less dance-able and high/low energy songs to see the differences in popularity. 
 
+## Any more cleaning of data based off notes from Professor Willis
 
+1. We would like to add a seconds column to show the length of the music as well. We will do that below.
+
+```{r}
+cleaned_spotify_and_youtube <- cleaned_spotify_and_youtube %>% 
+  mutate(duration_seconds = duration_ms/1000)
+```
+
+## Questions we attempted to answer
+
+1. What songs have the most streams on YouTube and Spotify and are they older or younger artists? 
+
+**A** On Spotify, the top five songs are: "Blinding Lights" by The Weeknd, "Shape of You" by Ed Sheeran, "Someone You Loved" by Lewis Capaldi, "rockstar (feat. 21 Savage)" by Post Malone and "Sunflower - Spider-Man: Into the Spider-Verse" by Post Malone. 
+
+The Weeknd is 33 years old, Ed Sheeran is 32 years old, Lewis Capaldi is 26 years old and Post Malone is 27 years old. It seems here the age range follows the mid-to-late 20s and early 30s age range for popular music artists with the most Spotify streams.
+
+It's important to note here they counted this song twice to reference both artists in the song, Post Malone and Swae Lee. When you look down the data set, it shows this for other songs as well, like "Closer" by The Chainsmokers and Halsey. The stream numbers are the same but just listed out twice for both artists. 
+
+On YouTube, the top five songs/videos are: "Despacito ft. Daddy Yankee" by Luis Fonsi, the same song listed again for number two, "Shape of You" by Ed Sheeran, "See You Again ft. Charlie Puth" by Wiz Khalifa and this song was also listed again for number five. 
+
+Luis Fonsi is 45 years old, Daddy Yankee is 46 years old, Ed Sheeran is 32 years old like mentioned before, Wiz Khalifa is 35 years old and Charlie Puth is 31 years old. From this data, it seems the range of ages is from early 30s to mid 40s. 
+
+After some research on YouTube and in the original data set, "Despacito" is listed twice because one is under the artist Luis Fonsi, and the other is under Daddy Yankee. It also shows on his YouTube page a couple videos for the song. The same goes for "See You Again," where it's listed below Wiz Khalifa and Charlie Puth. There also seems to be a few videos on this song on YouTube, so it's definitely a bit confusing. I'm wondering why view numbers are different. Could we or should we get rid of these duplicates?
+
+From this, it seems that overall, an older age of artists have had more views on YouTube and more tractions versus younger artists on Spotify. YouTube was only created a year before Spotify (2005 vs. 2006), according to a quick Google search, so it's interesting to see this age shift.
+
+**Question for Professor Willis** Would it be easier/more effective/cleaner to combine both data frames below? 
+
+```{r}
+
+# First, finding the top songs on Spotify
+
+most_streams_spotify <- cleaned_spotify_and_youtube %>% 
+  group_by(stream, track, artist) %>% 
+  summarise(count = n()) %>% 
+  arrange(desc(stream)) %>% 
+  select(stream, track, artist)
+
+# Second, finding the top songs on YouTube
+
+most_views_youtube <- cleaned_spotify_and_youtube %>% 
+  group_by(views, title, channel) %>% 
+  summarise(count = n()) %>% 
+  arrange(desc(views)) %>% 
+  select(views, title, channel)
+
+```
 
