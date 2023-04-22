@@ -140,3 +140,34 @@ most_views_youtube <- cleaned_spotify_and_youtube %>%
 
 ```
 
+2. 2. Do shorter or longer songs gain more traction or popularity?
+
+**A**
+On Spotify, the top 10 songs are Blinding Lights, Shape of You, Someone You Loved, rockstar, Sunflower (Post Malone), Sunflower (Swae Lee), One Dance, Closer (Halsey), Closer (Chainsmokers), Believer. 
+
+The top 10 Youtube videos are, Luis Fonsi - Despacito ft. Daddy Yankee, Luis Fonsi - Despacito ft. Daddy Yankee, Shape of You, See You Again ft. Charlie Puth, Wiz Khalifa - See You Again ft. Charlie Puth, Wheels on the Bus | CoComelon Nursery Rhymes, Uptown Funk ft. Bruno Mars, GANGNAM STYLE, Sugar, Roar. 
+
+According to an article by University Times, "every year, seconds of songs are being shaved off: Justin Timberlake’s “Cry Me A River” released in 2002 is five minutes long, while “Love The Way You Lie” by Rihanna and Eminem, released in 2010, is over four. By comparison, “Mood” by 24kGolden, which, at the time of writing, sits at the top of the Global Spotify charts is only two minutes and 20 seconds long." 
+
+Based on this alone, we can see that shorter songs attract more streams because of societies shortening attention spans. The article compared it to podcasts, and how people are now requesting 15 minute podcasts. 
+
+On YouTube its a little different with the top 10 songs being, Ella Baila Sola, Favorite Song, La Bebe (Remix), Peaches, Last Night, PRC, Flowers, Boy's a Liar Pt. 2, Por Las Noches and TQG. Because YouTube is based on their music videos, a lot of the time the video is longer than the song. Favorite Song is normally 3:28, but on YouTube it is 3:35. 
+
+What we can see here is a growing popularity of shorter songs and shorter music videos, and less of a production in the videos themselves. The reason being the short attention spans of listeners and viewers. 
+
+Based off of the code, shorter songs receive more streams and views. 
+
+```{r}
+# Sam found the top songs on Spotify and Youtube, now let's separate by length of songs
+length_spotify <- cleaned_spotify_and_youtube %>% 
+  group_by(track, stream, duration_ms) %>% 
+  summarize(count = n()) %>% 
+  arrange(desc(duration_ms))
+
+# Filter for YouTube views
+length_youtube <- cleaned_spotify_and_youtube %>% 
+  group_by(title, views, duration_minutes) %>% 
+  summarise(count = n()) %>% 
+  arrange(views) %>% 
+  select(duration_minutes, title)
+```
