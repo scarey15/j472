@@ -33,8 +33,8 @@ library(janitor)
 ```{r}
 # Load data and clean it
 
-spotify_and_youtube <- read_csv("/Users/samlcarey/Desktop/j472/major_assignments/data_analysis/data/Spotify_Youtube.csv")
-  cleaned_spotify_and_youtube <- spotify_and_youtube %>%
+spotify_youtube <- read_csv("data/Spotify_Youtube.csv")
+  cleaned_spotify_and_youtube <- spotify_youtube %>%
   clean_names() 
   
 ```
@@ -92,4 +92,60 @@ As mentioned by Professor Willis and after looking at our data, our data frame d
 3-5. These questions we can use the data to compare Spotify streams and YouTube views for songs, calculate totals and research artists' ages. We can even use Datawrapper for these to study the trends of longer or shorter songs and more or less dance-able and high/low energy songs to see the differences in popularity. 
 
 
+## Any more cleaning of data based off notes from Professor Willis
+1. We would like to add a seconds column to show the length of the music as well. We will do that below.
+```{r}
+cleaned_spotify_and_youtube - cleaned_spotify_and_youtube %% 
+  mutate(duration_seconds = duration_ms/1000)
+```
+## Questions we attempted to answer
 
+1. What songs have the most streams on YouTube and Spotify and are they older or younger artists?
+
+**A** On Spotify, the top five songs are: "Blinding Lights" by The Weeknd, "Shape of You" by Ed Sheeran, "Someone You Loved" by Lewis Capaldi, "rockstar (feat. 21 Savage)" by Post Malone and "Sunflower - Spider-Man: Into the Spider-Verse" by Post Malone.
+
+The Weeknd is 33 years old, Ed Sheeran is 32 years old, Lewis Capaldi is 26 years old and Post Malone is 27 years old. It seems here the age range follows the mid-to-late 20s and early 30s age range for popular music artists with the most Spotify streams.
+
+It's important to note here they counted this song twice to reference both artists in the song, Post Malone and Swae Lee. When you look down the data set, it shows this for other songs as well, like "Closer" by The Chainsmokers and Halsey. The stream numbers are the same but just listed out twice for both artists.
+
+On YouTube, the top five songs/videos are: "Despacito ft. Daddy Yankee" by Luis Fonsi, the same song listed again for number two, "Shape of You" by Ed Sheeran, "See You Again ft. Charlie Puth" by Wiz Khalifa and this song was also listed again for number five.
+
+Luis Fonsi is 45 years old, Daddy Yankee is 46 years old, Ed Sheeran is 32 years old like mentioned before, Wiz Khalifa is 35 years old and Charlie Puth is 31 years old. From this data, it seems the range of ages is from early 30s to mid 40s.
+
+After some research on YouTube and in the original data set, "Despacito" is listed twice because one is under the artist Luis Fonsi, and the other is under Daddy Yankee. It also shows on his YouTube page a couple videos for the song. The same goes for "See You Again," where it's listed below Wiz Khalifa and Charlie Puth. There also seems to be a few videos on this song on YouTube, so it's definitely a bit confusing. I'm wondering why view numbers are different. Could we or should we get rid of these duplicates?
+
+From this, it seems that overall, an older age of artists have had more views on YouTube and more tractions versus younger artists on Spotify. YouTube was only created a year before Spotify (2005 vs. 2006), according to a quick Google search, so it's interesting to see this age shift.
+
+2. Do shorter or longer songs gain more traction or popularity?
+
+**A**
+On Spotify, right now the top 10 songs are Ella Baila Sola- by Eslabon Armado, un x100to- by Grupo Frontera and Bad Bunny, Last Night- by Morgan Wallen, Double Fantasy- by The Weeknd and Future, La Bebe (remix)- by Yng Lvcas and Peso Pluma, Boy's a liar Pt. 2- by PinkPantheress and Ice Spice, Search & Rescue- by Drake, Kill Bill- by SZA, Slut me out- by NLE Choppa and PRC- by Peso Pluma. 
+
+All of these songs are under 5 minutes with Search & Rescue being the longest at 4:32 and Double Fantasy at 4:28. This list updates daily. 
+
+According to an article by University Times, "every year, seconds of songs are being shaved off: Justin Timberlake’s “Cry Me A River” released in 2002 is five minutes long, while “Love The Way You Lie” by Rihanna and Eminem, released in 2010, is over four. By comparison, “Mood” by 24kGolden, which, at the time of writing, sits at the top of the Global Spotify charts is only two minutes and 20 seconds long." 
+
+Based on this alone, we can see that shorter songs attract more streams because of societies shortening attention spans. The article compared it to podasts, and how people are now requesting 15 minute podcasts. 
+
+On YouTube its a little different with the top 10 songs being, Ella Baila Sola, Favorite Song, La Bebe (Remix), Peaches, Last Night, PRC, Flowers, Boy's a Liar Pt. 2, Por Las Noches and TQG. Because YouTube is based on their music videos, a lot of the time the video is longer than the song. Favorite Song is normally 3:28, but on YouTube it is 3:35. 
+
+What we can see here is a growing popularity of shorter songs and shorter music videos, and less of a production in the videos themselves. The reason being the short attention spans of listeners and viewers. 
+
+
+**Question for Professor Willis**
+Would it be easier/more effective/cleaner to combine both data frames below? 
+
+```{r}
+# First, finding the top songs on Spotify
+most_streams_spotify <- cleaned_spotify_and_youtube %>% 
+  group_by(stream, track, artist) %>% 
+  summarise(count = n()) %>% 
+  arrange(desc(stream)) %>% 
+  select(stream, track, artist)
+# Second, finding the top songs on YouTube
+most_views_youtube <- cleaned_spotify_and_youtube %>% 
+  group_by(views, title, channel) %>% 
+  summarise(count = n()) %>% 
+  arrange(desc(views)) %>% 
+  select(views, title, channel)
+```
