@@ -83,6 +83,8 @@ unique_words %>%
 
 **A2.** The top trigram that appears is "attorney trust account." After a quick Google search and reading articles from Smokeball, the MD Courts website, the American Bar Association and a few more, it seems that these accounts are where attorneys hold their clients' money. This money stays separate from their own accounts to hold safe and gather interest. After seeing the other top 10 trigrams, it seems that attorney trust accounts and what they do with them is a big issue for sanctions. There seems to be fraud, dishonesty, unreasonable fees, failing, and issues with account record keeping. The attorneys seem to be mishandling their clietns' money or being reckless/not keeping up with them. 
 
+One thing to note is there are 11 listed, the last being "trust account record" because it seems to have the same number and percentage found for the "account record keeping."
+
 ```{r}
 sanctions %>%
   unnest_tokens(trigram, text, token = "ngrams", n = 3) %>%
@@ -103,7 +105,7 @@ sanctions %>%
 
 There seems to be many of these trigrams, especially because it resulted as the leading one in Q2. After my research earlier on attorney trust accounts, it seems that there is heavy oversight by state bars over these accounts, along with requiring of financial transparency documents to keep attorneys accountable on the money they have held. So, it seems this is one of the easiest ways they are caught as they are heavily watched. My question is, why do so many seem to receive these sanctions and mess with trust accounts for clients?
 
-Besides reading through the sanctions documents provided, I think there is something else we can do to clarify this is the most important sanction. First, maybe we can write code for ngrams bigger than trigrams to get more context of phrases together and see where the trust accounts fall. Second, even just looking at the top ten trigrams, some seems similarly related to the trust accounts, such as "trust account failing," "collecting unreasonable fees," "unreasonable fees failing" and "account record keeping." We can look more into these phrases, how many times they occur and get their context from the sanctions to see how much attorney trust accounts lead to the most sanctions. 
+Besides reading through the sanctions documents provided, I think there is something else we can do to clarify this is the most important sanction. First, maybe we can write code for ngrams bigger than trigrams to get more context of phrases together and see where the trust accounts fall. Second, even just looking at the top ten trigrams, some seems similarly related to the trust accounts, such as "trust account failing," "collecting unreasonable fees," "unreasonable fees failing," "account record keeping" and "trust account record." We can look more into these phrases, how many times they occur and get their context from the sanctions to see how much attorney trust accounts lead to the most sanctions. 
 
 ```{r}
 sanctions_trustaccount <- sanctions %>% 
