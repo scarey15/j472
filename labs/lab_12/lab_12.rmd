@@ -1,0 +1,114 @@
+---
+title: "lab_12"
+author: "Sam Carey"
+date: "2023-05-02"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## You will need
+
+* tidytext and our usual libraries
+
+## Load libraries and establish settings
+
+**Task** Create a codeblock and load appropriate packages and settings for this lab.
+
+```{r}
+library(tidyverse)
+library(tidytext)
+library(janitor)
+library(lubridate)
+library(rvest)
+```
+
+## Questions
+
+**Q1.** You've been assigned to report a story about the leading reasons that Maryland attorneys get sanctioned by the state for misconduct. The state [publishes lists of sanctions](https://www.courts.state.md.us/attygrievance/sanctions) that contain a short text description about the situation. Load the CSV file in the data folder containing records from fiscal year 2011 onwards. Make a list of unique words from the text column, then following the example in the pre_lab, remove common "stop words" from that list and create a list of the top 10 words containing the percentage of occurrences each word represents. What's the leading word in that answer and, broadly, what do you think the top 10 words describe?
+
+**A1.** In my list of top 10 words, the leading word is "failing." The other words involve the clients of the attorneys (also known as respondents in these sanctions), money, conduct, consent and engagement. After reading some of the recent sanctions given, it seems that the top 10 words describe certain reasons or factors involving in their sanctions. The attorneys failed their proper engagement or communication with their clients, including illegal or incorrect conduct involving trusts and accounts holding money or funds. This could include mishandling this money. Consent involves consent of suspension or disbarment, meaning the attorney gives the court consent or agrees to suspend them or disbar them. I found this information off of a quick Google search and some resources that first loaded for Maryland government and CaseText. 
+
+When choosing stop words, I skimmed the sanctions dataframe and picked off common words such as "the," "or," "by," etc. Then, after looking at my top 10 list, I removed words that were there twice on the list, like "failed" and kept "failing," and "client" while keeping "clients." It seems these sanctions heavily involve the attorneys and their clients. 
+
+```{r}
+sanctions <- read_csv("data/md_attorney_sanctions.csv")
+
+unique_words <- sanctions %>% select(text) %>%
+  unnest_tokens(word, text)
+View(unique_words)
+
+data("stop_words")
+
+stop_words <- stop_words %>%
+  add_row(word = 'on') %>% 
+  add_row(word = "in") %>% 
+  add_row(word = "a") %>% 
+  add_row(word = "for") %>%
+  add_row(word = "to") %>%
+  add_row(word = "and") %>%
+  add_row(word = 'or') %>% 
+  add_row(word = 'the') %>% 
+  add_row(word = 'be') %>% 
+  add_row(word = 'but') %>% 
+  add_row(word = "being") %>% 
+  add_row(word = "did") %>% 
+  add_row(word = "not") %>% 
+  add_row(word = "of") %>%
+  add_row(word = "his") %>%
+  add_row(word = "he") %>%
+  add_row(word = 'state') %>% 
+  add_row(word = 'with') %>% 
+  add_row(word = 'law') %>% 
+  add_row(word = 'her') %>%
+  add_row(word = 'an') %>%
+  add_row(word = 'from') %>%
+  add_row(word = 'upon') %>%
+  add_row(word = 'that') %>%
+  add_row(word = 'she') %>% 
+  add_row(word = 'client') %>% 
+  add_row(word = 'failed')
+
+unique_words %>%
+  anti_join(stop_words) %>%
+  group_by(word) %>%
+  tally(sort=TRUE) %>%
+  mutate(percent = (n/sum(n))*100) %>%
+  top_n(10)
+```
+
+**Q2.** Let's move beyond single words to phrases. Make a list of the top 10 three-word phrases, called trigrams, based on the example from the pre_lab (you'll need to modify the example code to do this). What's the top trigram and how often does it appear? What does that phrase mean in legal terms?
+
+**A2.** The top trigram that appears is "attorney trust account." After a quick Google search and reading articles from Smokeball, the MD Courts website, the American Bar Association and a few more, it seems that these accounts are where attorneys hold their clients' money. This money stays separate from their own accounts to hold safe and gather interest. After seeing the other top 10 trigrams, it seems that attorney trust accounts and what they do with them is a big issue for sanctions. There seems to be fraud, dishonesty, unreasonable fees, failing, and issues with account record keeping. The attorneys seem to be mishandling their clietns' money or being reckless/not keeping up with them. 
+
+```{r}
+sanctions %>%
+  unnest_tokens(trigram, text, token = "ngrams", n = 3) %>%
+  separate(trigram, c("word1", "word2", "word3"), sep = " ") %>%
+  filter(!word1 %in% stop_words$word) %>%
+  filter(!word2 %in% stop_words$word) %>%
+  filter(!word3 %in% stop_words$word) %>%
+  mutate(trigram = paste(word1, word2, word3, sep=" ")) %>%
+  group_by(trigram) %>%
+  tally(sort=TRUE) %>%
+  mutate(percent = (n/sum(n))*100) %>%
+  top_n(10)
+```
+
+**Q3.** Let's drop back down to more traditional text analysis - take the top trigram from Q2 and write code to see how many times it occurs in the text column in each fiscal year. What do you think the answer produced by your code suggests? What else could you do to try and clarify the most important reasons attorneys get sanctioned?
+
+**A3.** Well first, it's shown that the trigram "account trust account" is found at least 3 or more times in each fiscal year from 2011 to 2023. The top two years where over 30 of this trigram was found was in 2021 and 2022. The least amount occurred in 2011. It also seems to be a trend where as the years increase or get more recent, more of this trigram are present. 2023 has three of this trigram, but the year still hasn't been completed. 
+
+There seems to be many of these trigrams, especially because it resulted as the leading one in Q2. After my research earlier on attorney trust accounts, it seems that there is heavy oversight by state bars over these accounts, along with requiring of financial transparency documents to keep attorneys accountable on the money they have held. So, it seems this is one of the easiest ways they are caught as they are heavily watched. My question is, why do so many seem to receive these sanctions and mess with trust accounts for clients?
+
+Besides reading through the sanctions documents provided, I think there is something else we can do to clarify this is the most important sanction. First, maybe we can write code for ngrams bigger than trigrams to get more context of phrases together and see where the trust accounts fall. Second, even just looking at the top ten trigrams, some seems similarly related to the trust accounts, such as "trust account failing," "collecting unreasonable fees," "unreasonable fees failing" and "account record keeping." We can look more into these phrases, how many times they occur and get their context from the sanctions to see how much attorney trust accounts lead to the most sanctions. 
+
+```{r}
+sanctions_trustaccount <- sanctions %>% 
+  filter(str_detect(text, "attorney trust account")) %>%
+  group_by(fiscal_year) %>%
+  summarise(count = n()) %>% 
+  arrange(desc(count))
+```
