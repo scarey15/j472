@@ -193,6 +193,66 @@ top_three_YouTube <- cleaned_spotify_and_youtube %>%
          avg_live = total_live/10, 
          avg_valence = total_valence/10)
 
+# Compare top 50/100/500/1000 for danceability on Spotify
+
+top_50_d <- cleaned_spotify_and_youtube %>% 
+  select(track, danceability, stream) %>% 
+  arrange(desc(stream)) %>% 
+  head(50)
+
+top_100_d <- cleaned_spotify_and_youtube %>% 
+  select(track, danceability, stream) %>% 
+  arrange(desc(stream)) %>% 
+  head(100)
+
+top_500_d <- cleaned_spotify_and_youtube %>% 
+  select(track, danceability, stream) %>% 
+  arrange(desc(stream)) %>% 
+  head(500)
+
+top_1000_d <- cleaned_spotify_and_youtube %>% 
+  select(track, danceability, stream) %>% 
+  arrange(desc(stream)) %>% 
+  head(1000)
+
+# Now for YouTube
+
+top_50_d_you <- cleaned_spotify_and_youtube %>% 
+  select(track, danceability, views) %>% 
+  arrange(desc(views)) %>% 
+  head(50)
+
+top_100_d_you <- cleaned_spotify_and_youtube %>% 
+  select(track, danceability, views) %>% 
+  arrange(desc(views)) %>% 
+  head(100)
+
+top_500_d_you <- cleaned_spotify_and_youtube %>% 
+  select(track, danceability, views) %>% 
+  arrange(desc(views)) %>% 
+  head(500)
+
+top_1000_d_you <- cleaned_spotify_and_youtube %>% 
+  select(track, danceability, views) %>% 
+  arrange(desc(views)) %>% 
+  head(1000)
+
+# Danceability and Stream/Views on a scatterplot 
+
+ggplot(cleaned_spotify_and_youtube, aes(x = danceability, y = stream)) +
+  geom_point(color = "blue", size = 0.5) +
+  labs(title = "Spotify Streams vs. YouTube Views",
+       x = "Danceability",
+       y = "Streams") +
+  theme_bw() 
+
+ggplot(cleaned_spotify_and_youtube, aes(x = danceability, y = views)) +
+  geom_point(color = "blue", size = 0.5) +
+  labs(title = "Spotify Streams vs. YouTube Views",
+       x = "Views",
+       y = "Streams") +
+  theme_bw() 
+
 ```
 
 2. Do shorter or longer songs gain more traction or popularity? 
@@ -260,6 +320,27 @@ top_100_y <- cleaned_spotify_and_youtube %>%
   mutate(minutes = duration_ms/60000) %>% 
   arrange(desc(views)) %>% 
   head(100)
+
+# Scatterplot
+
+ggplot(cleaned_spotify_and_youtube, aes(x = duration_ms, y = views)) +
+  geom_point(color = "blue", size = 1) +
+  labs(title = "Spotify Streams vs. YouTube Views",
+       x = "Duration",
+       y = "Views") +
+  theme_bw() + 
+  xlim(0, 1000000) +
+  ylim(0, 2000000000)
+
+ggplot(cleaned_spotify_and_youtube, aes(x = duration_ms, y = stream)) +
+  geom_point(color = "blue", size = 1) +
+  labs(title = "Spotify Streams vs. YouTube Views",
+       x = "Duration",
+       y = "Streams") +
+  theme_bw() + 
+  xlim(0, 1000000) +
+  ylim(0, 2000000000)
+
 ```
 
 3. Does the danceability and energy of a song affect its popularity?
