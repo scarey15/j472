@@ -100,56 +100,202 @@ cleaned_spotify_and_youtube - cleaned_spotify_and_youtube %%
 ```
 ## Questions we attempted to answer
 
-1. Do artists with more views/streams on average have songs that have similar characteristics represented in the data? (**WILL HAVE TO FIX CODE AND RESPONSE**)
+1. Do artists with more views/streams on average have songs that have similar characteristics represented in the data? 
 
-**A** On Spotify, the top five songs are: "Blinding Lights" by The Weeknd, "Shape of You" by Ed Sheeran, "Someone You Loved" by Lewis Capaldi, "rockstar (feat. 21 Savage)" by Post Malone and "Sunflower - Spider-Man: Into the Spider-Verse" by Post Malone.
+## Narrative for question
+Our original question, "What songs have the most streams on YouTube and Spotify and are they older or younger artists?" did not work in this project as we can't grasp this information from the data, and we could do more with the streams and views. This new question will observe average Spotify streams and YouTube views the artists have on their top 10 songs, and we will try to figure out if they show similar characteristics in the data that led to these top streams/views. 
 
-The Weeknd is 33 years old, Ed Sheeran is 32 years old, Lewis Capaldi is 26 years old and Post Malone is 27 years old. It seems here the age range follows the mid-to-late 20s and early 30s age range for popular music artists with the most Spotify streams.
+**A** To get this answer, we made two new dataframes to reveal total views/streams for each artist on both platforms and divide them by the number of songs listed in the dataframe (10). From there, we arranged each list by the averages per artist from most to least. 
 
-It's important to note here they counted this song twice to reference both artists in the song, Post Malone and Swae Lee. When you look down the data set, it shows this for other songs as well, like "Closer" by The Chainsmokers and Halsey. The stream numbers are the same but just listed out twice for both artists.
+After quickly glancing at both dataframes, we noticed that the lists seem to differ pretty largely from Spotify to YouTube. The top ten artists with the biggest average streams on Spotify, starting with #1, is Post Malone, Ed Sheeran, Dua Lipa, XXXTENTACION, The Weeknd, Justin Bieber, Imagine Dragons, Coldplay, Khalid and Bruno Mars. The top ten artists with the biggest average views on YouTube, starting with #1, is Ed Sheeran, CoComelon, Katy Perry, Charlie Puth, Luis Fonsi, Justin Bieber, Daddy Yankee, Bruno Mars, Macklemore & Ryan Lewis and Coldplay. 
 
-On YouTube, the top five songs/videos are: "Despacito ft. Daddy Yankee" by Luis Fonsi, the same song listed again for number two, "Shape of You" by Ed Sheeran, "See You Again ft. Charlie Puth" by Wiz Khalifa and this song was also listed again for number five.
+It's clear here that some artists do repeat in each list, like Justin Bieber, Coldplay and Ed Sheeran. Top average streams on Spotify is 1,525,126,385 whereas top average views on YouTube is 1,546,020,777. YouTube seems to cover a bit more ground in average streams/views area, but not by much. A question we can ask from this is, "Why are some artists getting more streams on Spotify and not on YouTube?" or "Why are some artists getting more views on YouTube and not on Spotify?"
 
-Luis Fonsi is 45 years old, Daddy Yankee is 46 years old, Ed Sheeran is 32 years old like mentioned before, Wiz Khalifa is 35 years old and Charlie Puth is 31 years old. From this data, it seems the range of ages is from early 30s to mid 40s.
+We think it's important to note that towards the bottom of both of these dataframes, there is no data for total views/streams for some artists, shown with "N/A." We wonder why this is. 
 
-After some research on YouTube and in the original data set, "Despacito" is listed twice because one is under the artist Luis Fonsi, and the other is under Daddy Yankee. It also shows on his YouTube page a couple videos for the song. The same goes for "See You Again," where it's listed below Wiz Khalifa and Charlie Puth. There also seems to be a few videos on this song on YouTube, so it's definitely a bit confusing. I'm wondering why view numbers are different. Could we or should we get rid of these duplicates?
+We now compared the top three artists on both dataframes to one another to see if characteristics line up that result in these higher streams/views. The top three artists on Spotify are Post Malone, Ed Sheeran and Dua Lipa. We created a dataframe to calculate averages of many of the characteristics included in the original dataframe, like danceability, valence, etc. Looking at them all together, it seems these three artists have similar danceability, about 0.7, energy at about 0.6-0.7, key from about 4.7-5.7 and loudness at about -4 to -5. It seems these could possibly be characteristics that lead to more streams on Spotify and popularity as an artist in general. These three artists also do fit in to the pop genre. We think it could have something to do with genre.
 
-From this, it seems that overall, an older age of artists have had more views on YouTube and more tractions versus younger artists on Spotify. YouTube was only created a year before Spotify (2005 vs. 2006), according to a quick Google search, so it's interesting to see this age shift.
+We now compare the top three artists on YouTube, Ed Sheeran, CoComelon and Katy Perry. These three don't seem to have as many similar as did the top three artists on Spotify. These three have similar danceability at around 0.7 and speechiness at around 0.04-0.05. CoComelon isn't an artist, it's a children's show. 
 
+To check to see if this trend continued with more streams/views and higher danceability, we compared the top 50, 100, 500 and 100 artists' danceability scores and streams/views for Spotify and YouTube. We did this to check and see if the top 10, or top 3, were just outliers or representative not of the entire dataframe. Below, we used code to graph the top 1000 artists, their danceability and streams/views to see an overall trend. 
+
+For the top 1000 artists and stream counts on Spotify, it seems many songs fall under the range of 0.50 to 0.75 on the danceability scale. As it reaches that range, the songs seem to make an arch increase to around 2,000,000,000 (2 billion) streams. We also do see two outliers above 3,000,000,000 (3 billion) streams. There doesn't seem to be a huge trend or increase in streams as danceability increases, but it seems more clear compared to the top 1000 artists and view counts on YouTube. On the scatterplot for YouTube, the range for danceability seems to be 0.6 to 0.8 where most artists' videos lie. In this plot, we don't see much of an arch of increase, but we do see about 5 outliers that reach above 4 billion views and one even reaching close to 8 billion. Then, we compared these plots to ones of the entire dataframe.
+
+In these two scatterplots, we can clearly see some sort of increase in the streams and views of the songs as the danceability score goes up. Both have a slow, gradual buildup as you move towards higher danceability scores. There are also clearly several outliers for each plot, so it is beneficial that we compared a sample of the data and the whole dataframe. It's importan to note that as danceability gets really high, the view and stream counts start to gradually drop, so the data makes a bit of an arch shape. It seems that as danceability increases, the stream and view count do show a gradual increase as well. 
+
+Overall, it seems that for both Spotify and YouTube, danceability seems to take a strong role in popularity and views/streams for an artist. 
 
 ```{r}
-# First, finding the top songs on Spotify
-most_streams_spotify <- cleaned_spotify_and_youtube %>% 
-  group_by(stream, track, artist) %>% 
-  summarise(count = n()) %>% 
+# Sam re-coded for this question to:
+# First, finding the top artists with streams on Spotify
+
+top_artists_spotify <- cleaned_spotify_and_youtube %>% 
+  group_by(artist) %>% 
+  summarise(total_streams = sum(stream)) %>%
+  mutate(avg_streams = total_streams/10) %>% 
+  arrange(desc(avg_streams)) %>% 
+  select(artist, total_streams, avg_streams)
+
+# Second, finding the top artists with views on YouTube
+
+top_artists_youtube <- cleaned_spotify_and_youtube %>% 
+  group_by(artist) %>% 
+  summarise(total_views = sum(views)) %>% 
+  mutate(avg_views = total_views/10) %>% 
+  arrange(desc(avg_views)) %>% 
+  select(artist, total_views, avg_views)
+
+# Compare artists
+
+top_three_spotify <- cleaned_spotify_and_youtube %>% 
+  filter(artist %in% c("Post Malone", "Ed Sheeran", "Dua Lipa")) %>% 
+  group_by(artist) %>% 
+  summarise(total_dance = sum(danceability), 
+            total_energy = sum(energy), 
+            total_tempo = sum(tempo), 
+            total_key = sum(key), 
+            total_loudness = sum(loudness), 
+            total_speech = sum(speechiness), 
+            total_acoust = sum(acousticness), 
+            total_instru = sum(instrumentalness), 
+            total_live = sum(liveness), 
+            total_valence = sum(valence)) %>% 
+  mutate(avg_dance = total_dance/10,
+         avg_energy = total_energy/10, 
+         avg_tempo = total_tempo/10, 
+         avg_key = total_key/10, 
+         avg_loudness = total_loudness/10, 
+         avg_speech = total_speech/10, 
+         avg_acoust = total_acoust/10, 
+         avg_instru = total_instru/10, 
+         avg_live = total_live/10, 
+         avg_valence = total_valence/10)
+
+top_three_YouTube <- cleaned_spotify_and_youtube %>% 
+  filter(artist %in% c("Ed Sheeran", "CoComelon", "Katy Perry")) %>% 
+  group_by(artist) %>% 
+  summarise(total_dance = sum(danceability), 
+            total_energy = sum(energy), 
+            total_tempo = sum(tempo), 
+            total_key = sum(key), 
+            total_loudness = sum(loudness), 
+            total_speech = sum(speechiness), 
+            total_acoust = sum(acousticness), 
+            total_instru = sum(instrumentalness), 
+            total_live = sum(liveness), 
+            total_valence = sum(valence)) %>% 
+  mutate(avg_dance = total_dance/10,
+         avg_energy = total_energy/10, 
+         avg_tempo = total_tempo/10, 
+         avg_key = total_key/10, 
+         avg_loudness = total_loudness/10, 
+         avg_speech = total_speech/10, 
+         avg_acoust = total_acoust/10, 
+         avg_instru = total_instru/10, 
+         avg_live = total_live/10, 
+         avg_valence = total_valence/10)
+
+# Compare top 50/100/500/1000 for danceability on Spotify
+
+top_50_d <- cleaned_spotify_and_youtube %>% 
+  select(track, danceability, stream) %>% 
   arrange(desc(stream)) %>% 
-  select(stream, track, artist)
-  
-# Second, finding the top songs on YouTube
-most_views_youtube <- cleaned_spotify_and_youtube %>% 
-  group_by(views, title, channel) %>% 
-  summarise(count = n()) %>% 
+  head(50)
+
+top_100_d <- cleaned_spotify_and_youtube %>% 
+  select(track, danceability, stream) %>% 
+  arrange(desc(stream)) %>% 
+  head(100)
+
+top_500_d <- cleaned_spotify_and_youtube %>% 
+  select(track, danceability, stream) %>% 
+  arrange(desc(stream)) %>% 
+  head(500)
+
+top_1000_d <- cleaned_spotify_and_youtube %>% 
+  select(track, danceability, stream) %>% 
+  arrange(desc(stream)) %>% 
+  head(1000)
+
+# Now for YouTube
+
+top_50_d_you <- cleaned_spotify_and_youtube %>% 
+  select(track, danceability, views) %>% 
   arrange(desc(views)) %>% 
-  select(views, title, channel)
+  head(50)
+
+top_100_d_you <- cleaned_spotify_and_youtube %>% 
+  select(track, danceability, views) %>% 
+  arrange(desc(views)) %>% 
+  head(100)
+
+top_500_d_you <- cleaned_spotify_and_youtube %>% 
+  select(track, danceability, views) %>% 
+  arrange(desc(views)) %>% 
+  head(500)
+
+top_1000_d_you <- cleaned_spotify_and_youtube %>% 
+  select(track, danceability, views) %>% 
+  arrange(desc(views)) %>% 
+  head(1000)
+
+# Danceability and Stream/Views on scatterplot for top 1000 Spotify and YouTube
+
+ggplot(top_1000_d, aes(x = danceability, y = stream)) +
+  geom_point(color = "blue", size = 0.5) +
+  labs(title = "With a higher danceability, there are more streams on Spotify",
+       x = "Danceability",
+       y = "Streams") +
+  theme_bw()
+
+ggplot(top_1000_d_you, aes(x = danceability, y = views)) +
+  geom_point(color = "blue", size = 0.5) +
+  labs(title = "Many videos on YouTube range from 0.6 to 0.8 for danceability",
+       x = "Danceability",
+       y = "Views") +
+  theme_bw()
+
+# Danceability and Stream/Views on a scatterplot 
+
+ggplot(cleaned_spotify_and_youtube, aes(x = danceability, y = stream)) +
+  geom_point(color = "blue", size = 0.5) +
+  labs(title = "With a higher danceability, there are more streams on Spotify",
+       x = "Danceability",
+       y = "Streams") +
+  theme_bw() 
+
+ggplot(cleaned_spotify_and_youtube, aes(x = danceability, y = views)) +
+  geom_point(color = "blue", size = 0.5) +
+  labs(title = "With a higher danceability, there are more views on YouTube",
+       x = "Danceability",
+       y = "Views") +
+  theme_bw() 
+
 ```
 
+2. Do shorter or longer songs gain more traction or popularity? 
 
-2. Do shorter or longer songs gain more traction or popularity? (**Use whole data set not just top 10**)
+## Narrative for question
+For this question, we were advised to consider much more of the dataframe versus the top 10 songs, as we are given the durations for all 20,718 songs. We were advised to see if there was some sort of cutoff where songs wouldn't reach a certain number of streams or views depending on how long the song is. We attempted to answer these questions by making two separate data frames of the streams for each song on Spotify and for YouTube, and then taking the top 10, 50 and 100 songs stream wise and view wise and pulled them into separate dataframes to see if we could recognize a trend of length of song versus stream/view count. 
 
 **A**
-On Spotify, the top 10 songs are Blinding Lights, Shape of You, Someone You Loved, rockstar, Sunflower (Post Malone), Sunflower (Swae Lee), One Dance, Closer (Halsey), Closer (Chainsmokers), Believer. 
+On Spotify, the top 10 songs are Blinding Lights, Shape of You, Someone You Loved, rockstar (feat. 21 Savage), Sunflower - Spider-Man: Into the Spider-Verse (listed twice), One Dance, Closer (listed twice) and Believer. The top 10 Youtube videos are, Luis Fonsi - Despacito ft. Daddy Yankee (listed twice), Shape of You, See You Again ft. Charlie Puth (listed twice), Wheels on the Bus | CoComelon Nursery Rhymes, Uptown Funk ft. Bruno Mars, Gangnam Style (강남스타일), Sugar and Roar. 
 
-The top 10 Youtube videos are, Luis Fonsi - Despacito ft. Daddy Yankee, Luis Fonsi - Despacito ft. Daddy Yankee, Shape of You, See You Again ft. Charlie Puth, Wiz Khalifa - See You Again ft. Charlie Puth, Wheels on the Bus | CoComelon Nursery Rhymes, Uptown Funk ft. Bruno Mars, GANGNAM STYLE, Sugar, Roar. 
+The top 10 songs on Spotify have lengths ranging between 3 to 4 minutes, with more in the 3 minute range, and the top 10 songs on YouTube have lengths ranging between 3 to 4 minutes as well, with more settling in the 4 minute range. This is interesting to note, because many time music videos tend to be a bit longer to provide more context or story to the song, versus Spotify where the song just plays. Clearly here, the songs are on the shorter side. 
 
 According to an article by University Times, "every year, seconds of songs are being shaved off: Justin Timberlake’s “Cry Me A River” released in 2002 is five minutes long, while “Love The Way You Lie” by Rihanna and Eminem, released in 2010, is over four. By comparison, “Mood” by 24kGolden, which, at the time of writing, sits at the top of the Global Spotify charts is only two minutes and 20 seconds long." 
 
 Based on this alone, we can see that shorter songs attract more streams because of societies shortening attention spans. The article compared it to podcasts, and how people are now requesting 15 minute podcasts. 
 
-On YouTube its a little different with the top 10 songs being, Ella Baila Sola, Favorite Song, La Bebe (Remix), Peaches, Last Night, PRC, Flowers, Boy's a Liar Pt. 2, Por Las Noches and TQG. Because YouTube is based on their music videos, a lot of the time the video is longer than the song. Favorite Song is normally 3:28, but on YouTube it is 3:35. 
+Now, when studying the whole list of songs, their streams/views, and duration, it is a bit difficult to pinpoint an exact cutoff where views or streams stop depending on the length of the songs. So, we studied the top 100 songs and tried to reach some sort of conclusion. The longest songs on Spotify within the top 100 range from 5 to 6 minutes, and for YouTube 5 to 10 minutes. YouTube shows a lot bigger of a range, and that could be due to its visual aspects and storyline. We believe past those ranges, streams and views begin to drop, while also noting there are many shorter songs that range in the 1 to 2 minutes that are within the top 100. The most common range for popularity lies between 3 and 4 minutes, which is on the shorter side. 
 
-What we can see here is a growing popularity of shorter songs and shorter music videos, and less of a production in the videos themselves. The reason being the short attention spans of listeners and viewers. 
+We created two scatterplots to show the trend of length of songs in milliseconds and the stream and view counts. In these two plots, we can clearly see a trend of when songs are on the shorter side, there is a quick and steep increase in stream/view count. For both, it seems that songs reach their peak views/streams at a little less than 250,000 milliseconds, or a little under 4 minutes in length. After it hits 250,000 milliseconds, the number of streams and views seem to drop off and decrease. 
 
-Based off of the code, shorter songs receive more streams and views. 
+Overall, it seems that shorter songs do attract more popularity, and that length does influence popularity of artists' songs.
+
+What's interesting to not and what could be conflicting our data is duplicates of many songs when they have features, because they show them for both artists. Also, there are songs that have N/A values for both streams and views. We wonder why the data has these values.  
+
+To make a story from this data, we could ask questions like, why do people like listening to shorter songs? Does it involve short attention spans? Do people like listening to shorter songs on Spotify but watching the videos that may be longer? What draws them to longer videos? This would require some more research and interviewing those with musical expertise and also people who listen to music.
 
 
 ```{r}
@@ -158,14 +304,65 @@ length_spotify <- cleaned_spotify_and_youtube %>%
   group_by(track, stream, duration_ms) %>% 
   summarize(count = n()) %>% 
   arrange(desc(duration_ms))
-  
-# Filter for YouTube views
 
+top_10 <- cleaned_spotify_and_youtube %>% 
+  select(track, duration_ms, stream) %>% 
+  arrange(desc(stream)) %>% 
+  head(10)
+
+top_50 <- cleaned_spotify_and_youtube %>% 
+  select(track, duration_ms, stream) %>% 
+  arrange(desc(stream)) %>% 
+  head(50)
+
+top_100 <- cleaned_spotify_and_youtube %>% 
+  select(track, duration_ms, stream) %>% 
+  mutate(minutes = duration_ms/60000) %>% 
+  arrange(desc(stream)) %>% 
+  head(100)
+
+# Filter for YouTube views
 length_youtube <- cleaned_spotify_and_youtube %>% 
-  group_by(title, views, duration_minutes) %>% 
+  group_by(track, views, duration_ms) %>% 
   summarise(count = n()) %>% 
-  arrange(views) %>% 
-  select(duration_minutes, title)
+  arrange(desc(duration_ms)) %>% 
+  select(duration_ms, track)
+
+top_10_y <- cleaned_spotify_and_youtube %>% 
+  select(track, duration_ms, views) %>% 
+  arrange(desc(views)) %>% 
+  head(10)
+
+top_50_y <- cleaned_spotify_and_youtube %>% 
+  select(track, duration_ms, views) %>% 
+  arrange(desc(views)) %>% 
+  head(50)
+
+top_100_y <- cleaned_spotify_and_youtube %>% 
+  select(track, duration_ms, views) %>% 
+  mutate(minutes = duration_ms/60000) %>% 
+  arrange(desc(views)) %>% 
+  head(100)
+
+# Scatterplot
+
+ggplot(cleaned_spotify_and_youtube, aes(x = duration_ms, y = views)) +
+  geom_point(color = "blue", size = 1) +
+  labs(title = "The most views occur a little before 250,000 milliseconds",
+       x = "Duration in Milliseconds",
+       y = "Views") +
+  theme_bw() + 
+  xlim(0, 1000000) +
+  ylim(0, 2000000000)
+
+ggplot(cleaned_spotify_and_youtube, aes(x = duration_ms, y = stream)) +
+  geom_point(color = "blue", size = 1) +
+  labs(title = "The most streams occur a little before 250,000 milliseconds",
+       x = "Duration in Milliseconds",
+       y = "Streams") +
+  theme_bw() + 
+  xlim(0, 1000000) +
+  ylim(0, 2000000000)
 
 ```
 
@@ -187,6 +384,133 @@ length_youtube <- cleaned_spotify_and_youtube %>%
 
 5. Do more people listen to music through Spotify or YouTube? 
 
-```{r}
+## Narrative for question
+We decided to include this question as a replacement for a question dating back to milestone_01. Since we can't compare data from Apple Music to Spotify or YouTube because the dataframe doesn't include it, we will compare Spotify and YouTube. To do this, we summed up the total views YouTube received in this dataframe and how many total streams Spotify has in the dataframe.
 
+**A** In total, YouTube, from this dataframe, has a view count of 1,902,053,002,307. In total, Spotify has a stream count of 2,738,147,598,694. As we can see here, Spotify has gathered more traction from these songs and artists compared to YouTube. 
+
+The question is, how accurate is this? There are many songs that contain N/A values for streams and views, which is why we added "na.rm = TRUE" to the code below. Would these values of swayed to one side of the other, or made it more equal? These two big numbers, in the trillions, are pretty close to each other. 
+
+For this question, we're wondering anything else we can tap into or research the difference between the usage of these two platforms. Both are similar and different in their own ways, where YouTube is a ground for more video content and Spotify for solely music. Do people like listening more than watching?
+
+**WILL BE WRITING MORE**
+
+Line graph of top 100 artists listed by most to least average streams: https://www.datawrapper.de/_/fuUWV/  
+
+Line graph of all artists listed by most to least average streams: https://www.datawrapper.de/_/Fzobp/ 
+
+```{r}
+# Comparing total views and streams
+
+total_views_and_streams <- cleaned_spotify_and_youtube %>% 
+  summarise(total_views = sum(views, na.rm = TRUE), 
+            total_streams = sum(stream, na.rm = TRUE)) %>% 
+  select(total_views, total_streams)
+
+# Dataframe with all stats and STREAMS ONLY
+
+streams_and_stats <- select(cleaned_spotify_and_youtube, -views, -url_youtube, -title, -channel, -likes, -comments, -description, -licensed, -official_video)
+
+streams_and_stats <- streams_and_stats %>% 
+  group_by(artist) %>% 
+  summarise(total_streams = sum(stream),
+            total_dance = sum(danceability), 
+            total_energy = sum(energy), 
+            total_tempo = sum(tempo), 
+            total_key = sum(key), 
+            total_loudness = sum(loudness), 
+            total_speech = sum(speechiness), 
+            total_acoust = sum(acousticness), 
+            total_instru = sum(instrumentalness), 
+            total_live = sum(liveness), 
+            total_valence = sum(valence)) %>% 
+  mutate(avg_streams = total_streams/10,
+         avg_dance = total_dance/10,
+         avg_energy = total_energy/10, 
+         avg_tempo = total_tempo/10, 
+         avg_key = total_key/10, 
+         avg_loudness = total_loudness/10, 
+         avg_speech = total_speech/10, 
+         avg_acoust = total_acoust/10, 
+         avg_instru = total_instru/10, 
+         avg_live = total_live/10, 
+         avg_valence = total_valence/10) %>% 
+  select(-starts_with("total_")) %>% 
+  arrange(desc(avg_streams))
+
+# Dataframe with all stats and VIEWS ONLY
+
+views_and_stats <- select(cleaned_spotify_and_youtube, -stream, -url_spotify, -track, -album, -album_type, -uri)
+
+views_and_stats <- views_and_stats %>% 
+  group_by(artist) %>% 
+  summarise(total_views = sum(views),
+            total_dance = sum(danceability), 
+            total_energy = sum(energy), 
+            total_tempo = sum(tempo), 
+            total_key = sum(key), 
+            total_loudness = sum(loudness), 
+            total_speech = sum(speechiness), 
+            total_acoust = sum(acousticness), 
+            total_instru = sum(instrumentalness), 
+            total_live = sum(liveness), 
+            total_valence = sum(valence)) %>% 
+  mutate(avg_views = total_views/10,
+         avg_dance = total_dance/10,
+         avg_energy = total_energy/10, 
+         avg_tempo = total_tempo/10, 
+         avg_key = total_key/10, 
+         avg_loudness = total_loudness/10, 
+         avg_speech = total_speech/10, 
+         avg_acoust = total_acoust/10, 
+         avg_instru = total_instru/10, 
+         avg_live = total_live/10, 
+         avg_valence = total_valence/10) %>% 
+  select(-starts_with("total_")) %>% 
+  arrange(desc(avg_views))
+
+# Average streams and views of top 100 artists with highest average streams
+
+avg_streams_and_views <- cleaned_spotify_and_youtube %>% 
+  group_by(artist) %>% 
+  summarise(total_views = sum(views, na.rm = TRUE), 
+            total_streams = sum(stream, na.rm = TRUE)) %>%
+  mutate(avg_views = total_views/10,
+         avg_streams = total_streams/10) %>% 
+  arrange(desc(avg_streams)) %>% 
+  select(-starts_with("total_")) %>% 
+  head(100)
+
+write.csv(avg_streams_and_views, "data/avg_streams_and_views.csv", row.names = TRUE)
+
+# Average streams and views of all artists listed by most to least average streams
+
+avg_streams_and_views_all <- cleaned_spotify_and_youtube %>% 
+  group_by(artist) %>% 
+  summarise(total_views = sum(views, na.rm = TRUE), 
+            total_streams = sum(stream, na.rm = TRUE)) %>%
+  mutate(avg_views = total_views/10,
+         avg_streams = total_streams/10) %>% 
+  arrange(desc(avg_streams)) %>% 
+  select(-starts_with("total_")) 
+
+write.csv(avg_streams_and_views_all, "data/avg_streams_and_views_all.csv", row.names = TRUE)
 ```
+
+```{r, echo=FALSE}
+# Graph one of top 100 artists with highest average streams 
+knitr::include_graphics("images/tentacionaveragestreams.png")
+
+# Graph of all artists listed by most to least average streams
+knitr::include_graphics("images/cocomelonaverageviews.png")
+```
+
+## What is our most newsworthy find and why?
+
+**A** We think our most newsworthy find out of these questions is that shorter songs tend to grasp more views/streams/popularity. Why? We think because it can tap into a much deeper study and story findings than simply off of this dataframe.
+
+We can see from here that shorter songs gain more traction. Could this be because of short-attention spans? Why are short attention spans occurring? What age bracket/generation tends to have shorter attention spans? How does this effect music. We can see this in the article we found for that question that artists now aim to make shorter songs, but many still do exceed expectations with longer songs that speak to their talent and willingness to tell a story. 
+
+We can dig further here. Social media has been an influence on shorter attention spans, especially TikTok. TikTok bases a lot of their content on music! Many songs that are older or recently released grow more in popularity because TikTok users become infatuated with one lyric or beat and search the songs to listen to them, increasing streams and views. Many artists have had one-hit wonders because of this. 
+
+All of these pieces tie in to one another, which we think would be a great story that would attract artists and a range of ages for readers to see effects on popularity of music due to many characteristics like length and short attention spans. 
