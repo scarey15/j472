@@ -444,6 +444,8 @@ The question is, how accurate is this? There are many songs that contain N/A val
 
 For this question, we're wondering anything else we can tap into or research the difference between the usage of these two platforms. Both are similar and different in their own ways, where YouTube is a ground for more video content and Spotify for solely music. Do people like listening more than watching?
 
+**WILL BE WRITING MORE**
+
 Line graph of top 100 artists listed by most to least average streams: https://www.datawrapper.de/_/fuUWV/  
 
 Line graph of all artists listed by most to least average streams: https://www.datawrapper.de/_/Fzobp/ 
@@ -544,7 +546,14 @@ avg_streams_and_views_all <- cleaned_spotify_and_youtube %>%
   select(-starts_with("total_")) 
 
 write.csv(avg_streams_and_views_all, "data/avg_streams_and_views_all.csv", row.names = TRUE)
+```
 
+```{r, echo=FALSE}
+# Graph one of top 100 artists with highest average streams 
+knitr::include_graphics("images/tentacionaveragestreams.png")
+
+# Graph of all artists listed by most to least average streams
+knitr::include_graphics("images/cocomelonaverageviews.png")
 ```
 
 ## What is our most newsworthy find and why?
