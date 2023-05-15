@@ -266,7 +266,7 @@ top_100_y <- cleaned_spotify_and_youtube %>%
 3. Does the danceability and energy of a song affect its popularity?
 
 ## Narrative for question
-For this question, we are looking in the danceability and energy columns for both YouTube and Spotify. First we find the most streamed songs for Spotify and order them from most to least danceable and most energetic. Then we do the same thing for YouTube, only we are looking at the number of views the song receives. From this code, we are able to know what the most viewed and streamed song is, and the level of danceability and how energetic the top songs are. We are able to see the correlation between how danceable and energetic a song is, to how popular it is.
+For this question, we are looking in the danceability and energy columns for both YouTube and Spotify. First we find the most streamed songs for Spotify and order them from most to least danceable and most energetic. Then we do the same thing for YouTube, only we are looking at the number of views the song receives. From this code, we are able to know what the most viewed and streamed song is, and the level of danceability and how energetic the top songs are. We are able to see the correlation between how danceable and energetic a song is, to how popular it is. The scatterplots allow us to visually see the danceability of a song compared too the views/streams it has.
 
 **A** This code shows the danceability and energy of each Spotify song, when changing the arrangement from streams to danceability to energy, we are able to see the effect each has on the amount of streams on each song.
 
