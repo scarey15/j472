@@ -28,6 +28,7 @@ library(tidyverse)
 library(lubridate)
 library(janitor)
 library(corrr)
+library(dplyr)
 ```
 
 ## Load and Clean Data
@@ -328,7 +329,7 @@ dance_youtube %>%
 4. Do songs that are not licensed and not official videos gets more or less views on YouTube compared to those that are licensed or official videos?
 
 ## Narrative for question
-In the main dataframe, we can see that some videos seemed to be licensed, not licensed, official videos, and not official videos on YouTube. We wondered, would that make an effect on view counts? For this question, we are looking at the licensed songs and the official music video columns. We are only looking at YouTube’s data here, which we will group only by the song title, the amount of views, if it is licensed/not licensed and if it is classified as an official music video/not official. From the results, we can see that the top unlicensed songs with unofficial music videos, are getting a lot of views. We used code below to separate licensed and official videos with those that aren't so we could compare views. 
+In the main dataframe, we can see that some videos seemed to be licensed, not licensed, official videos, and not official videos on YouTube. We wondered, would that make an effect on view counts? For this question, we are looking at the licensed songs and the official music video columns. We are only looking at YouTube’s data here, which we will group only by the song title, the amount of views, if it is licensed/not licensed and if it is classified as an official music video/not official. From the results, we can see that the top unlicensed songs with unofficial music videos, are getting a lot of views. We used code below to separate licensed and official videos with those that aren't so we could compare views. The second part of this code gives us a dataframe to order the number of times a certain artists appears on the licensed and unlicensed dataframes. 
 
 **A** Based on the code we can first see that there are many more videos that are licensed and official (13,470) versus non-licensed and non-official (4,275). When looking at the dataframe for licensed and official videos, we can see that they've reached high ranges of 3 billion to 8 billion views. For videos that are not licensed or official, they received 3 billion to 4 billion as their high range. Their view counts immediately drop off into the 1 billions and millions shortly after the top 7 songs. 
 
@@ -336,20 +337,37 @@ Based off of the code, we can see that the licensed and official videos, receive
 
 It's important to note again that some of the songs in the dataframe do not contain values and are listed with "N/A."
 
+With the channel counting dataframes, we can now see any outliers from both the licensed dataframe and the unlicensed dataframe. In this channel dataframe (or artists YouTube channel name) we see that a lot of the licensed and official songs are attached to an official YouTube channel. Some examples being Vevo, Company, Sony Music, Records, etc. The unlicensed and unofficial songs seem to be attached to channels with less official names, for example 'BLESSD EL BENDITO 💙', 'Lyrical Lemonade', '30PRAUM'. 
+
+From this new 'artist' data we are able to see that more official artists have more popular songs. The unoffical channels are succcessful butt now as much as the official ones. 
+
 ```{r}
 # Dorothy found licensed videos and official videos for YouTube views
 licensed_youtube <- cleaned_spotify_and_youtube %>%
   filter(licensed == TRUE, official_video == TRUE) %>%
-  group_by(title, views, licensed, official_video) %>%
+  group_by(title, views, channel, licensed, official_video) %>%
   summarise(count = n()) %>%
   arrange(desc(views))
 
 # Sam found non-licensed and non-official videos
 not_licensed_youtube <- cleaned_spotify_and_youtube %>%
   filter(licensed == FALSE, official_video == FALSE) %>%
-  group_by(title, views, licensed, official_video) %>%
+  group_by(title, views, channel, licensed, official_video) %>%
   summarise(count = n()) %>%
   arrange(desc(views))
+
+# Counting the Channels for licensed songs (artists)
+licensed_channel_count <- licensed_youtube %>% 
+  group_by(channel) %>% 
+  summarise(total_count = sum(count)) %>% 
+  arrange(desc(total_count))
+
+# Counting the Channels for not-licensed songs (artists)
+unlicensed_channel_count <- not_licensed_youtube %>% 
+  group_by(channel) %>% 
+  summarise(total_count = sum(count)) %>% 
+  arrange(desc(total_count))
+
 ```
 
 5. Do more people listen to music through Spotify or YouTube? 
