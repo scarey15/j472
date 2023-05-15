@@ -359,9 +359,11 @@ We decided to include this question as a replacement for a question dating back 
 
 **A** In total, YouTube, from this dataframe, has a view count of 1,902,053,002,307. In total, Spotify has a stream count of 2,738,147,598,694. As we can see here, Spotify has gathered more traction from these songs and artists compared to YouTube. 
 
-The question is, how accurate is this? There are many songs that contain N/A values for streams and views, which is why we added "na.rm = TRUE" to the code below. Would these values of swayed to one side of the other, or made it more equal? These two big numbers, in the trillions, are pretty close to each other. 
+The question is, how accurate is this? There are many songs that contain N/A values for streams and views, which is why we added "na.rm = TRUE" to the code below. Would these values of swayed to one side or the other, or made it more equal? These two big numbers, in the trillions, are pretty close to each other. 
 
 For this question, we're wondering anything else we can tap into or research the difference between the usage of these two platforms. Both are similar and different in their own ways, where YouTube is a ground for more video content and Spotify for solely music. Do people like listening more than watching?
+
+Also, this data doesn't contain any other form of content on both platforms, Spotify has podcasts, and YouTube has normal videos that aren't considered music. These are not taken into account here, so there could be a bigger difference between the two, if we had more data to go off of. 
 
 ```{r}
 total_views_and_streams <- cleaned_spotify_and_youtube %>% 
